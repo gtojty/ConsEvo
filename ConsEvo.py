@@ -53,8 +53,8 @@ REC_FREQ = 200   # frequency for recording results
 NUM_CON = 300   # number of consonants produced in one communication
 SCEN = '0'    # type of scenario: 0, no consonant replacement; 
             # '1a', consonant replacement only in bi-bi communication and has threshold restrict;
-            # '1b', consonant replacement only in bi-bi communication and has no threshold restrict;
-            # '2a', consonant replacement occurs in all communications and has threshold restrict;
+            # '2a', consonant replacement only in bi-bi communication and has no threshold restrict;
+            # '1b', consonant replacement occurs in all communications and has threshold restrict;
             # '2b', consonant replacement occurs in all communications and has no threshold restrict; 
 FREQ_ADJ = 0.002    # freqency adjustment for consonant replacement to occur; 
 FREQ_THRES = 0.01   # threshold of frequency for consonant replacement to occur;
@@ -1080,19 +1080,18 @@ def drawSSD_cond(direct, SSDtype, DrawType, cond_PopList, ScenTypeList, ComRange
                 
             # draw errorbar figure
             fig = plt.figure(); fig.set_size_inches(20, 10); ax = fig.add_subplot(111); fontsize = 20
-            linestyleList = ['-','--','-.', ':']
-#            dashstyleList = [[12,12], # line
-#                             [3,3], # dot
-#                             [6,6], # dash
-#                             [12,6,12,6], # dash dot
-#                             [3,6,3,6], # dash dot dot
-#                             [12,6,12,6,3,6]] # dash dash dot
+            #linestyleList = ['-','--','-.', ':']
+            dashstyleList = [[12,12], # line
+                             [3,3], # dot
+                             [6,6], # dash
+                             [12,6,12,6], # dash dot
+                             [3,6,3,6]] # dash dot dot
             curStyle = 0
             for Pop in cond_PopList:
-                if curStyle < len(linestyleList): ax.errorbar(resDF.numCom, resDF.loc[:, Pop + '_totSSD'], color = 'black', linestyle = linestyleList[curStyle], yerr = resDF.loc[:, Pop + '_totSSD_std'], elinewidth = 2, capsize = 5)    
-                else: ax.errorbar(resDF.numCom, resDF.loc[:, Pop + '_totSSD'], color = 'red', linestyle = linestyleList[curStyle%len(linestyleList)], yerr = resDF.loc[:, Pop + '_totSSD_std'], elinewidth = 2, capsize = 5)    
-                #if curStyle < len(dashstyleList): ax.errorbar(resDF.numCom, resDF.loc[:, Pop + '_totSSD'], color = 'black', dashes = dashstyleList[curStyle], yerr = resDF.loc[:, Pop + '_totSSD_std'], elinewidth = 2, capsize = 5)    
-                #else: ax.errorbar(resDF.numCom, resDF.loc[:, Pop + '_totSSD'], color = 'red', dashes = dashstyleList[curStyle%len(dashstyleList)], yerr = resDF.loc[:, Pop + '_totSSD_std'], elinewidth = 2, capsize = 5)    
+                #if curStyle < len(linestyleList): ax.errorbar(resDF.numCom, resDF.loc[:, Pop + '_totSSD'], color = 'black', linestyle = linestyleList[curStyle], yerr = resDF.loc[:, Pop + '_totSSD_std'], elinewidth = 2, capsize = 5)    
+                #else: ax.errorbar(resDF.numCom, resDF.loc[:, Pop + '_totSSD'], color = 'red', linestyle = linestyleList[curStyle%len(linestyleList)], yerr = resDF.loc[:, Pop + '_totSSD_std'], elinewidth = 2, capsize = 5)    
+                if curStyle < len(dashstyleList): ax.errorbar(resDF.numCom, resDF.loc[:, Pop + '_totSSD'], color = 'black', dashes = dashstyleList[curStyle], yerr = resDF.loc[:, Pop + '_totSSD_std'], elinewidth = 2, capsize = 5)    
+                else: ax.errorbar(resDF.numCom, resDF.loc[:, Pop + '_totSSD'], color = 'red', dashes = dashstyleList[curStyle%len(dashstyleList)], yerr = resDF.loc[:, Pop + '_totSSD_std'], elinewidth = 2, capsize = 5)    
                 curStyle += 1
             ax.set_xlabel('Communications per Agent', fontsize=fontsize)
             ax.set_ylabel('SSD', fontsize=fontsize)
@@ -1205,7 +1204,6 @@ ComRange = np.arange(0,10001,200)
 SSDtype = 0
 colSSD_IndRun(direct, SSDtype, empType, cond_PopList, ScenTypeList, ComRange)
 colSSD_Ind_Avg(direct, SSDtype, cond_PopList, ScenTypeList, ComRange)
-cond_PopList = ['P_0_100', 'P_10_90', 'P_20_80', 'P_30_70', 'P_60_40', 'P_70_30', 'P_80_20', 'P_90_10']
 drawSSD_cond(direct, 0, 1, cond_PopList, ScenTypeList, ComRange)
 # part results
 cond_PopList = ['P_0_100', 'P_10_90', 'P_20_80', 'P_30_70', 'P_40_60', 'P_50_50', 'P_60_40']
@@ -1218,8 +1216,21 @@ drawSSD_cond(direct, 0, 2, cond_PopList, ScenTypeList, ComRange)
 # to further calculate and show imposed results
 # plotImpRes('.', 'Duoxu', 'Lizu', np.arange(0,10001,200))
 # calSSDRes('.', 'Lizu', np.arange(0,10001,200))
-# for Scenario 2a, draw imposed figure at P_10_90 at 1000
-sce = 'Scen2a'; fold = 'P_10_90'; comm = 1000
+# for Scenario 2a, draw imposed figure at P_0_100 at 0
+sce = 'Scen2a'; fold = 'P_0_100'; comm = 0
+plotImpRes(os.path.join(direct, sce, fold), 'Duoxu', 'Lizu', [comm])
+plotImpRes(os.path.join(direct, sce, fold), 'Duoxu_PCVG', 'Lizu', [comm])
+# for Scenario 1b, draw imposed figure at P_0_100 at 1000
+sce = 'Scen1b'; fold = 'P_0_100'; comm = 1000
+plotImpRes(os.path.join(direct, sce, fold), 'Duoxu', 'Lizu', [comm])
+plotImpRes(os.path.join(direct, sce, fold), 'Duoxu_PCVG', 'Lizu', [comm])
+# for Scenario 2b, draw imposed figure at P_0_100 at 200
+sce = 'Scen2b'; fold = 'P_0_100'; comm = 200
+plotImpRes(os.path.join(direct, sce, fold), 'Duoxu', 'Lizu', [comm])
+plotImpRes(os.path.join(direct, sce, fold), 'Duoxu_PCVG', 'Lizu', [comm])
+
+# for Scenario 1b, draw imposed figure at P_10_90 at 1000
+sce = 'Scen1b'; fold = 'P_10_90'; comm = 1000
 plotImpRes(os.path.join(direct, sce, fold), 'Duoxu', 'Lizu', [comm])
 plotImpRes(os.path.join(direct, sce, fold), 'Duoxu_PCVG', 'Lizu', [comm])
 # for Scenario 2b, draw imposed figure at P_20_80 at 200
@@ -1228,7 +1239,7 @@ plotImpRes(os.path.join(direct, sce, fold), 'Duoxu', 'Lizu', [comm])
 plotImpRes(os.path.join(direct, sce, fold), 'Duoxu_PCVG', 'Lizu', [comm])
 
 # compared to SVM
-sce = 'Scen2a'; fold = 'P_60_40'; comm = 10000
+sce = 'Scen1b'; fold = 'P_60_40'; comm = 10000
 plotImpRes(os.path.join(direct, sce, fold), 'SWM', 'Lizu', [comm])
 sce = 'Scen2b'; fold = 'P_50_50'; comm = 10000
 plotImpRes(os.path.join(direct, sce, fold), 'SWM', 'Lizu', [comm])
@@ -1243,11 +1254,11 @@ for scen in ScenTypeList:
             subdf = df[df.runID==runID]
             numCom = int(subdf.loc[subdf.totSSD==min(subdf.totSSD),'numCom'])
             minSSD = float(subdf.loc[subdf.totSSD==min(subdf.totSSD),'totSSD'])
-            if scen=='Scen0' or scen=='Scen1a' or scen=='Scen1b': socPres = 0
+            if scen=='Scen0' or scen=='Scen1a' or scen=='Scen2a': socPres = 0
             else: socPres = 1
-            if scen=='Scen0' or scen=='Scen2a' or scen=='Scen2b': markedness = 0
+            if scen=='Scen0' or scen=='Scen1b' or scen=='Scen2b': markedness = 0
             else: markedness = 1
-            if scen=='Scen0' or scen=='Scen1b' or scen=='Scen2b': comtype = 0
+            if scen=='Scen0' or scen=='Scen2a' or scen=='Scen2b': comtype = 0
             else: comtype = 1 
             AllRes = AllRes.append({'Pop': poprate,
                                     'runID': runID,
@@ -1275,7 +1286,7 @@ colSSD_IndRun(direct, SSDtype, empType, cond_PopList, ScenTypeList, ComRange)
 colSSD_Ind_Avg(direct, SSDtype, cond_PopList, ScenTypeList, ComRange)
 drawSSD_cond(direct, 0, 1, cond_PopList, ScenTypeList, ComRange)
 
-# for Fmkd (Scenb_P_10_90/0.001, 0.002, 0.005)
+# for Fmkd (Scen1a_P_10_90/0.001, 0.002, 0.005)
 direct = '.'
 simType = 'Lizu'; empType = 'Duoxu'
 cond_PopList = ['0.005', '0.01', '0.05']
