@@ -23,7 +23,7 @@ rcorr(as.matrix(sub_f), type = c("pearson"))
 # general linear regression models
 lm1 <- glm(minSSD ~ Pop + socPres + markedness + comtype  +
                     #Pop:socPres + Pop:markedness + Pop:comtype + 
-                    socPres:comtype, data=D)
+                    markedness:comtype, data=D)
 summary(lm1)
 # Deviance Residuals: 
 #   Min          1Q      Median          3Q         Max  
@@ -31,12 +31,12 @@ summary(lm1)
 # 
 # Coefficients:
 #   Estimate Std. Error t value Pr(>|t|)    
-# (Intercept)        9.055e-03  5.366e-05 168.755  < 2e-16 ***
-#   Pop                6.344e-04  9.964e-05   6.367 3.50e-10 ***
-#   socPres1          -1.444e-03  6.302e-05 -22.910  < 2e-16 ***
-#   markedness1       -8.622e-05  6.302e-05  -1.368    0.172    
-# comtype1           1.014e-04  6.302e-05   1.610    0.108    
-# socPres1:comtype1  6.810e-04  8.912e-05   7.641 7.16e-14 ***
+# (Intercept)           9.055e-03  5.366e-05 168.755  < 2e-16 ***
+#   Pop                   6.344e-04  9.964e-05   6.367 3.50e-10 ***
+#   socPres1             -1.444e-03  6.302e-05 -22.910  < 2e-16 ***
+#   markedness1          -8.622e-05  6.302e-05  -1.368    0.172    
+# comtype1              7.824e-04  6.302e-05  12.416  < 2e-16 ***
+#   markedness1:comtype1 -6.810e-04  8.912e-05  -7.641 7.16e-14 ***
 #   ---
 #   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 # 
